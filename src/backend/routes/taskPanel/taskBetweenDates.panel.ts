@@ -4,12 +4,16 @@ import { body } from 'express-validator'
 import { TRoute } from '../types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
-import { deleteTask } from '../../services/task.service'
 
+import { getTasksBetweenDates } from '../../services/panel.service'
 export default {
-    method: 'get',
-    path: '/api/task/delete',
-    validators: [authorize, body('taskId').not().isEmpty()],
+    method: 'post',
+    path: '/api/taskPanel/get_by_date',
+    validators: [
+        authorize,
+        body('taskId').not().isEmpty(),
+        body('status').not().isEmpty(),
+    ],
 
     handler: async (req: Request, res: Response) =>
         handleRequest({
@@ -17,7 +21,7 @@ export default {
             res,
             responseSuccessStatus: StatusCodes.OK,
             execute: async () => {
-                await deleteTask(req.body())
+                await getTasksBetweenDates(req.body())
             },
         }),
 } as TRoute

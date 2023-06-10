@@ -23,6 +23,6 @@ model Task {
   description String
   userId String
   complete Boolean
-  taskStatus String @default("to do")
+  taskStatus String @default("do zrobienia")
   deadLineDate DateTime
 }

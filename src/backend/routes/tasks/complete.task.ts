@@ -4,7 +4,7 @@ import { body } from 'express-validator'
 import { TRoute } from '../types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
-import { markTask } from '../../services/task.service'
+import { markAsComplete } from '../../services/task.service'
 import { RequestForUser } from '../../services/task.service'
 export default {
     method: 'get',
@@ -17,8 +17,7 @@ export default {
             res,
             responseSuccessStatus: StatusCodes.OK,
             execute: async () => {
-                const userId = req.user.id
-                await markTask(req.body(), userId)
+                await markAsComplete(req.body())
             },
         }),
 } as TRoute

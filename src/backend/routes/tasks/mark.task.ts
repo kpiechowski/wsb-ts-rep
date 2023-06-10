@@ -4,24 +4,21 @@ import { body } from 'express-validator'
 import { TRoute } from '../types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
-import { addTask } from '../../services/task.service'
-
+import { markTask } from '../../services/task.service'
+import { RequestForUser } from '../../services/task.service'
 export default {
     method: 'post',
-    path: '/api/task/add',
-    validators: [
-        authorize,
-        body('title').not().isEmpty(),
-        body('complete').isBoolean(),
-        body('description').not().isEmpty(),
-        body('deadLineDate').not().isEmpty(),
-        body('taskStatus').not().isEmpty(),
-    ],
-    handler: async (req: Request, res: Response) =>
+    path: '/api/task/mark',
+    validators: [authorize, body('taskId').not().isEmpty()],
+
+    handler: async (req: RequestForUser, res: Response) =>
         handleRequest({
             req,
             res,
-            responseSuccessStatus: StatusCodes.CREATED,
-            execute: async () => await addTask(req.body),
+            responseSuccessStatus: StatusCodes.OK,
+            execute: async () => {
+                const userId = req.user.id
+                await markTask(req.body(), userId)
+            },
         }),
 } as TRoute

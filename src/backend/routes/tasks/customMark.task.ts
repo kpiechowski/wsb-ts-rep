@@ -1,15 +1,19 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { body } from 'express-validator'
 import { TRoute } from '../types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
-import { markTask } from '../../services/task.service'
+import { customMark } from '../../services/task.service'
 import { RequestForUser } from '../../services/task.service'
 export default {
-    method: 'get',
-    path: '/api/task/mark',
-    validators: [authorize, body('taskId').not().isEmpty()],
+    method: 'post',
+    path: '/api/task/customMark',
+    validators: [
+        authorize,
+        body('taskId').not().isEmpty(),
+        body('status').not().isEmpty(),
+    ],
 
     handler: async (req: RequestForUser, res: Response) =>
         handleRequest({
@@ -18,7 +22,7 @@ export default {
             responseSuccessStatus: StatusCodes.OK,
             execute: async () => {
                 const userId = req.user.id
-                await markTask(req.body(), userId)
+                await customMark(req.body(), userId)
             },
         }),
 } as TRoute

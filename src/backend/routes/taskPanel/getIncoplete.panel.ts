@@ -4,12 +4,12 @@ import { body } from 'express-validator'
 import { TRoute } from '../types'
 import { handleRequest } from '../../utils/request.utils'
 import { authorize } from '../../utils/middleware.utils'
-import { deleteTask } from '../../services/task.service'
+import { getIncompleteTasks } from '../../services/panel.service'
 
 export default {
     method: 'get',
-    path: '/api/task/delete',
-    validators: [authorize, body('taskId').not().isEmpty()],
+    path: '/api/taskPanel/incomplete',
+    validators: [authorize],
 
     handler: async (req: Request, res: Response) =>
         handleRequest({
@@ -17,7 +17,7 @@ export default {
             res,
             responseSuccessStatus: StatusCodes.OK,
             execute: async () => {
-                await deleteTask(req.body())
+                await getIncompleteTasks()
             },
         }),
 } as TRoute
